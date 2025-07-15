@@ -16,7 +16,7 @@ export const MessagesView = ({ uiMessages, chatId }: Props) => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const { messages, sendMessage } = useChat({
+  const { messages, sendMessage, status, stop } = useChat({
     messages: uiMessages,
     transport: new DefaultChatTransport({
       api: "/api/chat",
@@ -50,12 +50,12 @@ export const MessagesView = ({ uiMessages, chatId }: Props) => {
   return (
     <div className="flex h-full flex-col justify-start relative items-center">
       <div className="relative w-full">
-        <MessagesList messages={messages} />
+        <MessagesList messages={messages} status={status} />
         <div className="bg-gradient-to-b from-transparent to-neutral-100 dark:to-neutral-900 h-10 w-full absolute bottom-0 " />
       </div>
 
       <div className="absolute bottom-3 w-3/4">
-        <MessageForm sendMessage={sendMessage} />
+        <MessageForm status={status} stop={stop} sendMessage={sendMessage} />
       </div>
     </div>
   );

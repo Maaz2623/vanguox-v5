@@ -11,22 +11,24 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import React, { useState } from "react";
+import React from "react";
 import { MemoizedMarkdown } from "@/components/memoized-markdown";
 import { UIDataTypes, UIMessage, UIMessagePart, UITools } from "ai";
+import { useChat } from "@ai-sdk/react";
 
 interface Props {
   role: UIMessage["role"];
   parts: UIMessagePart<UIDataTypes, UITools>[];
+  status?: ReturnType<typeof useChat>["status"];
 }
 
-export const MessagesCard = ({ role, parts }: Props) => {
+export const MessagesCard = ({ role, parts, status }: Props) => {
   return (
     <div className="">
       {role === "user" ? (
         <UserMessage parts={parts} />
       ) : (
-        <AssistantMessage parts={parts} />
+        <AssistantMessage parts={parts} status={status} />
       )}
     </div>
   );
@@ -55,13 +57,15 @@ const UserMessage = ({
 
 interface AssistantMessagePros {
   parts: UIMessagePart<UIDataTypes, UITools>[];
+  status?: ReturnType<typeof useChat>["status"];
 }
 
 export const AssistantMessage = React.memo(
-  ({ parts }: AssistantMessagePros) => {
-    
+  ({ parts, status }: AssistantMessagePros) => {
     const markdown = parts
       .filter((part) => part.type === "text")
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       .map((part) => part.text)
       .join("\n\n");
 
@@ -94,32 +98,34 @@ export const AssistantMessage = React.memo(
           ) : ( */}
             <MemoizedMarkdown content={markdown} id="123456" />
             {/* )} */}
-            <div className="h-7 -mt-7 -ml-2 flex justify-start items-center transition-all duration-300">
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant={`ghost`}
-                    size={`icon`}
-                    className="cursor-pointer p-0! rounded-[10px]!"
-                  >
-                    <CopyIcon className="size-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>Copy text</TooltipContent>
-              </Tooltip>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant={`ghost`}
-                    size={`icon`}
-                    className="cursor-pointer rounded-[10px]!"
-                  >
-                    <Share2Icon className="size-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>Share link</TooltipContent>
-              </Tooltip>
-            </div>
+            {status === "ready" && (
+              <div className="h-7 -mt-7 -ml-2 flex justify-start items-center transition-all duration-300">
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant={`ghost`}
+                      size={`icon`}
+                      className="cursor-pointer p-0! rounded-[10px]!"
+                    >
+                      <CopyIcon className="size-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>Copy text</TooltipContent>
+                </Tooltip>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant={`ghost`}
+                      size={`icon`}
+                      className="cursor-pointer rounded-[10px]!"
+                    >
+                      <Share2Icon className="size-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>Share link</TooltipContent>
+                </Tooltip>
+              </div>
+            )}
           </Card>
         </div>
       </div>

@@ -1,17 +1,23 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { useChat } from "@ai-sdk/react";
-import { ArrowUpIcon } from "lucide-react";
+import { ArrowUpIcon, SquareIcon } from "lucide-react";
 import { useState } from "react";
 import TextAreaAutoSize from "react-textarea-autosize";
 
 type SendMessage = ReturnType<typeof useChat>["sendMessage"];
 
+type Status = ReturnType<typeof useChat>["status"];
+
+type Stop = ReturnType<typeof useChat>["stop"];
+
 interface Props {
   sendMessage: SendMessage;
+  status: Status;
+  stop: Stop;
 }
 
-export const MessageForm = ({ sendMessage }: Props) => {
+export const MessageForm = ({ sendMessage, status }: Props) => {
   const [input, setInput] = useState("");
 
   const onSubmit = () => {
@@ -49,7 +55,11 @@ export const MessageForm = ({ sendMessage }: Props) => {
           <div className="h-8 flex justify-between items-center">
             <div />
             <Button size={`icon`} type="submit">
-              <ArrowUpIcon />
+              {status === "ready" ? (
+                <ArrowUpIcon />
+              ) : (
+                <SquareIcon className="fill-white" />
+              )}
             </Button>
           </div>
         </form>

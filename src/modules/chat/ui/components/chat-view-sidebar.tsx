@@ -30,6 +30,7 @@ import {
 } from "@/components/ui/sidebar";
 import { ChatViewSwitcher } from "./chat-view-switcher";
 import { ChatViewNavSecondary } from "./chat-view-nav-secondary";
+import { authClient } from "@/lib/auth-client";
 
 const data = {
   user: {
@@ -151,6 +152,8 @@ const data = {
 export function ChatViewSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
+  const { data: auth } = authClient.useSession();
+
   return (
     <Sidebar collapsible="icon" className="" {...props}>
       <SidebarHeader>
@@ -165,7 +168,13 @@ export function ChatViewSidebar({
         <ChatViewNavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
-        <ChatViewNavUser user={data.user} />
+        {auth && (
+          <ChatViewNavUser
+            name={auth.user.name}
+            email={auth.user.email}
+            image={auth.user.image}
+          />
+        )}
       </SidebarFooter>
     </Sidebar>
   );
