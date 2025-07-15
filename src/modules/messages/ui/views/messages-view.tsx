@@ -10,7 +10,13 @@ interface Props {
 export const MessagesView = ({ chatId }: Props) => {
   return (
     <div className="h-full flex flex-col justify-center relative items-center border">
-      {!chatId ? <NewMessagesView /> : "Messages List"}
+      {!chatId ? (
+        <div className="w-full">
+          <NewMessagesView />
+        </div>
+      ) : (
+        "Messages List"
+      )}
       <div
         className={cn("w-2/3 absolute bottom-24", chatId && "bottom-2 w-/3/4")}
       >
