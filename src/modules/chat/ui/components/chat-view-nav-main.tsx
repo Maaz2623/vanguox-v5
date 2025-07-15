@@ -22,6 +22,7 @@ export function ChatViewNavMain({
 }) {
   const router = useRouter();
 
+
   return (
     <SidebarGroup>
       <SidebarGroupContent className="flex flex-col gap-2">
