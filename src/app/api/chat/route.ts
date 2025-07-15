@@ -11,7 +11,7 @@ import {
 import { eq } from 'drizzle-orm';
 import { headers } from 'next/headers';
 
-export const maxDuration = 30;
+export const maxDuration = 200;
 
 export async function POST(req: Request) {
   const session = await auth.api.getSession({
