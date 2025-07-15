@@ -106,6 +106,7 @@ export const AssistantMessage = React.memo(
             {/* {isTypewriter ? (
             <Typewriter typeSpeed={10} words={[content]} />
           ) : ( */}
+          
             <MemoizedMarkdown content={markdown} id="123456" />
             {/* )} */}
             {status === "ready" && (
