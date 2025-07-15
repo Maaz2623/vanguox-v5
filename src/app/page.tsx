@@ -1,18 +1,25 @@
 import { auth } from "@/lib/auth";
+import ChatView from "@/modules/chat/ui/views/chat-view";
+import { HomeView } from "@/modules/home/ui/views/home-view";
 import { headers } from "next/headers";
-import { redirect } from "next/navigation";
 import React from "react";
 
-const HomePage = async () => {
+interface Props {
+  params: Promise<{
+    chatId: string;
+  }>;
+}
+
+const HomePage = async ({ params }: Props) => {
+  const { chatId } = await params;
+
+
+
   const data = await auth.api.getSession({
     headers: await headers(),
   });
 
-  if (!data) {
-    redirect(`/auth`);
-  }
-
-  return <div>HomePage</div>;
+  return <>{!data ? <HomeView /> : <ChatView chatId={chatId} />}</>;
 };
 
 export default HomePage;
