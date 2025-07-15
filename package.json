@@ -55,6 +55,7 @@
     "dotenv": "^17.2.0",
     "drizzle-orm": "^0.44.2",
     "embla-carousel-react": "^8.6.0",
+    "framer-motion": "^12.23.6",
     "highlight.js": "^11.11.1",
     "input-otp": "^1.4.2",
     "lucide-react": "^0.525.0",

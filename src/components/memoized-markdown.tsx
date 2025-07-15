@@ -47,7 +47,7 @@ const MemoizedMarkdownBlock = memo(
 
             // Inline code (rendered inside <p>)
             return (
-              <code className="bg-neutral-300 dark:bg-neutral-700 px-1 py-0.5 mx-auto rounded text-[14px] font-mono">
+              <code className="bg-neutral-300 transition-all duration-500 dark:bg-neutral-700 px-1 py-0.5 mx-auto rounded text-[14px] font-mono">
                 {children}
               </code>
             );

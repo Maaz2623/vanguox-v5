@@ -15,6 +15,7 @@ import React from "react";
 import { MemoizedMarkdown } from "@/components/memoized-markdown";
 import { UIDataTypes, UIMessage, UIMessagePart, UITools } from "ai";
 import { useChat } from "@ai-sdk/react";
+import { AnimatePresence, motion } from "framer-motion";
 
 interface Props {
   role: UIMessage["role"];
@@ -40,18 +41,27 @@ const UserMessage = ({
   parts: UIMessagePart<UIDataTypes, UITools>[];
 }) => {
   return (
-    <div className="w-full flex justify-end text-[15px] pr-4">
-      <Card className="shadow-none w-fit max-w-[60%] py-2 px-4 rounded-md! bg-primary/70 text-white border-primary/30">
-        {Array.isArray(parts) &&
-          parts.map((part, i) => {
-            if (part.type === "text") {
-              return <div key={i}>{part.text}</div>;
-            }
-            // Optional: fallback for other part types
-            return null;
-          })}
-      </Card>
-    </div>
+    <AnimatePresence mode="wait" initial={true}>
+      <motion.div
+        className="w-full flex justify-end text-[15px] pr-4"
+        key="user-message-card"
+        initial={{ y: 10, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        exit={{ y: 10, opacity: 0 }}
+        transition={{ duration: 0.2 }}
+      >
+        <Card className="shadow-none w-fit max-w-[60%] py-2 px-4 rounded-md! bg-primary/70 text-white border-primary/30">
+          {Array.isArray(parts) &&
+            parts.map((part, i) => {
+              if (part.type === "text") {
+                return <div key={i}>{part.text}</div>;
+              }
+              // Optional: fallback for other part types
+              return null;
+            })}
+        </Card>
+      </motion.div>
+    </AnimatePresence>
   );
 };
 
