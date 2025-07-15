@@ -7,6 +7,9 @@ import { useState } from "react";
 import TextAreaAutoSize from "react-textarea-autosize";
 
 export const HomeView = () => {
+
+  
+
   return (
     <div className="bg-sidebar h-screen flex flex-col justify-center items-center">
       <div className="flex flex-col gap-y-4 text-center -mt-20 justify-center items-center">

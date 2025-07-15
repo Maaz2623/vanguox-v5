@@ -1,16 +1,24 @@
+"use client";
 import { Button } from "@/components/ui/button";
+import { UIMessage, useChat } from "@ai-sdk/react";
 import { ArrowUpIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import TextAreaAutoSize from "react-textarea-autosize";
 
-export const MessageForm = () => {
+type SendMessage = ReturnType<typeof useChat>["sendMessage"];
+
+interface Props {
+  chatId: string;
+  initialMessages: UIMessage[];
+  sendMessage: SendMessage;
+}
+
+export const MessageForm = ({ sendMessage }: Props) => {
   const [input, setInput] = useState("");
 
-  const router = useRouter();
-
   const onSubmit = () => {
-    router.replace(`/auth`);
+    sendMessage({ text: input });
+    setInput("");
   };
 
   return (

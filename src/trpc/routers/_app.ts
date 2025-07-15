@@ -1,17 +1,7 @@
-import { z } from 'zod';
-import { baseProcedure, createTRPCRouter } from '../init';
+import { createTRPCRouter } from '../init';
+import { chatRouter } from '@/modules/chat/server/chat.procedure';
 export const appRouter = createTRPCRouter({
-  hello: baseProcedure
-    .input(
-      z.object({
-        text: z.string(),
-      }),
-    )
-    .query((opts) => {
-      return {
-        greeting: `hello ${opts.input.text}`,
-      };
-    }),
+  chat: chatRouter,
 });
 // export type definition of API
 export type AppRouter = typeof appRouter;

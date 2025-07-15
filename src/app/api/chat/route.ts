@@ -2,54 +2,79 @@ import { db } from '@/db';
 import { chatsTable } from '@/db/schema';
 import { auth } from '@/lib/auth';
 import { google } from '@ai-sdk/google';
-import { streamText, UIMessage, convertToModelMessages, smoothStream } from 'ai';
+import {
+  streamText,
+  UIMessage,
+  convertToModelMessages,
+  smoothStream,
+} from 'ai';
 import { eq } from 'drizzle-orm';
 import { headers } from 'next/headers';
 
-// Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
 
 export async function POST(req: Request) {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  const data = await auth.api.getSession({
-    headers: await headers()
-  })
-
-
-  if(!data) {
-    throw new Error("Unauthorized")
+  if (!session) {
+    throw new Error('Unauthorized');
   }
 
+  const { messages, chatId }: { messages: UIMessage[]; chatId: string } =
+    await req.json();
 
+  const latestUserMessage = messages.at(-1);
+  if (!latestUserMessage || latestUserMessage.role !== 'user') {
+    throw new Error('Missing user message');
+  }
 
-  const { messages }: { messages: UIMessage[] } = await req.json();
+  // Save the user message
+  const [chat] = await db
+    .select()
+    .from(chatsTable)
+    .where(eq(chatsTable.id, chatId));
 
+  if (!chat) {
+    throw new Error('Chat not found');
+  }
 
+  const updatedWithUser = [...(chat.messages ?? []), latestUserMessage];
 
+  await db
+    .update(chatsTable)
+    .set({ messages: updatedWithUser })
+    .where(eq(chatsTable.id, chatId));
+
+  // Now stream the assistant's reply and save that too
   const result = streamText({
-    model: google("gemini-2.0-flash"),
-    messages: convertToModelMessages(messages),
+    model: google('gemini-2.0-flash'),
+    messages: convertToModelMessages(updatedWithUser),
     experimental_transform: smoothStream({
       delayInMs: 50,
-      chunking: "word",
+      chunking: 'word',
     }),
     async onFinish({ response }) {
-      const latest = response.messages.at(-1); // get only the latest message
-      if (!latest) return;
+      const latestAssistantMessage = response.messages.at(-1);
+      if (!latestAssistantMessage) return;
 
-      const [chat] = await db
+      const [chatAfterUser] = await db
         .select()
         .from(chatsTable)
-        .where(eq(chatsTable.title, "Demo Chat"));
+        .where(eq(chatsTable.id, chatId));
 
-      if (!chat) return;
+      if (!chatAfterUser) return;
 
-      const updatedMessages = [...(chat.messages ?? []), latest];
+      const updatedMessages = [
+        ...(chatAfterUser.messages ?? []),
+        latestAssistantMessage,
+      ];
 
       await db
         .update(chatsTable)
         .set({ messages: updatedMessages as UIMessage[] })
-        .where(eq(chatsTable.title, "Demo Chat"));
+        .where(eq(chatsTable.id, chatId));
     },
   });
 
