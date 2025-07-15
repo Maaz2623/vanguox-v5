@@ -152,7 +152,7 @@ export function ChatViewSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar collapsible="icon" {...props}>
+    <Sidebar collapsible="icon" className="" {...props}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>

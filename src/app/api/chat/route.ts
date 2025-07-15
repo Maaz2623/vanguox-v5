@@ -52,7 +52,7 @@ export async function POST(req: Request) {
     model: google('gemini-2.0-flash'),
     messages: convertToModelMessages(updatedWithUser),
     experimental_transform: smoothStream({
-      delayInMs: 50,
+      delayInMs: 20,
       chunking: 'word',
     }),
     async onFinish({ response }) {

@@ -49,7 +49,10 @@ export const MessagesView = ({ uiMessages, chatId }: Props) => {
 
   return (
     <div className="flex h-full flex-col justify-start relative items-center">
-      <MessagesList messages={messages} />
+      <div className="relative w-full">
+        <MessagesList messages={messages} />
+        <div className="bg-gradient-to-b from-transparent to-neutral-100 dark:to-neutral-900 h-10 w-full absolute bottom-0 " />
+      </div>
 
       <div className="absolute bottom-3 w-3/4">
         <MessageForm sendMessage={sendMessage} />

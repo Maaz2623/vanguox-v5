@@ -10,8 +10,8 @@ interface Props {
 export const MessagesList = ({ messages }: Props) => {
   return (
     <ScrollArea className="h-[500px] w-full overflow-hidden relative">
-      <div className=" bg-gradient-to-b from-neutral-900 to-transparent h-6 w-full absolute top-0" />
-      <div className="p-4 h-full w-3/4 mx-auto pt-10 pb-40">
+      <div className=" bg-gradient-to-b z-50 from-neutral-100 dark:from-neutral-900 to-transparent h-6 w-full absolute top-0" />
+      <div className="p-4 h-full w-3/4 mx-auto pt-10 pb-40 space-y-8">
         {messages.map((message) => (
           <MessagesCard
             role={message.role}

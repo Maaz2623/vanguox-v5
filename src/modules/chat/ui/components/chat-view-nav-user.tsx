@@ -29,6 +29,8 @@ import {
 } from "@/components/ui/sidebar";
 import { useTheme } from "next-themes";
 import { MonitorIcon, MoonIcon, SunIcon, SunMoonIcon } from "lucide-react";
+import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 export function ChatViewNavUser({
   user,
@@ -42,6 +44,8 @@ export function ChatViewNavUser({
   const { isMobile } = useSidebar();
 
   const { setTheme } = useTheme();
+
+  const router = useRouter();
 
   return (
     <SidebarMenu>
@@ -123,7 +127,17 @@ export function ChatViewNavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => {
+                authClient.signOut({
+                  fetchOptions: {
+                    onSuccess: () => {
+                      router.push(`/`);
+                    },
+                  },
+                });
+              }}
+            >
               <IconLogout />
               Log out
             </DropdownMenuItem>
