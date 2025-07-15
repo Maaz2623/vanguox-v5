@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { UIMessage, useChat } from "@ai-sdk/react";
+import { useChat } from "@ai-sdk/react";
 import { ArrowUpIcon } from "lucide-react";
 import { useState } from "react";
 import TextAreaAutoSize from "react-textarea-autosize";
@@ -8,8 +8,6 @@ import TextAreaAutoSize from "react-textarea-autosize";
 type SendMessage = ReturnType<typeof useChat>["sendMessage"];
 
 interface Props {
-  chatId: string;
-  initialMessages: UIMessage[];
   sendMessage: SendMessage;
 }
 
@@ -22,7 +20,7 @@ export const MessageForm = ({ sendMessage }: Props) => {
   };
 
   return (
-    <div className="w-full mt-10">
+    <div className="w-full">
       <div className="rounded-lg w-full mx-auto bg-neutral-200 dark:bg-neutral-800 border dark:border-neutral-700 border-neutral-300 overflow-hidden p-2">
         <form onSubmit={onSubmit}>
           <TextAreaAutoSize
