@@ -42,6 +42,8 @@ export async function POST(req: Request) {
 
   const updatedWithUser = [...(chat.messages ?? []), latestUserMessage];
 
+  const trimmedMessages = updatedWithUser.slice(-6)
+
   await db
     .update(chatsTable)
     .set({ messages: updatedWithUser })
@@ -50,7 +52,7 @@ export async function POST(req: Request) {
   // Now stream the assistant's reply and save that too
   const result = streamText({
     model: google('gemini-2.0-flash'),
-    messages: convertToModelMessages(updatedWithUser),
+    messages: convertToModelMessages(trimmedMessages),
     tools: {
       google_search: google.tools.googleSearch({})
     },
